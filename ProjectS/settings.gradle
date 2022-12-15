@@ -1,0 +1,22 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "Project-S"
+include ':presentation'
+include ':app'
+include ':data'
+include ':domain'
+include ':core'
+include ':data:thirdparty'
+include ':data:thirdparty:netfunnel'
