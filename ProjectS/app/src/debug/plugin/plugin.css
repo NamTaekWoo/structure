@@ -1,0 +1,49 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+
+h2, h3 {
+  padding: 0 8px 0 8px;
+}
+
+button {
+  box-shadow: none;
+  border-radius: 4px;
+  border: 0;
+  background: #1150c5;
+  color: #fff;
+  padding: 8px;
+  font-size: 13px;
+}
+
+.plugin>.item {
+  margin-top: 8px;
+  padding: 0 8px 0 8px;
+}
+
+.plugin::after {
+  content: '';
+  border-bottom: 16px solid #ebf2ff;
+  display: block;
+  margin-top: 16px;
+}
+
+#toolbar {
+  overflow: hidden;
+  background-color: #fff;
+  padding: 8px;
+}
+
+#toolbar>input {
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  box-sizing: border-box;
+}

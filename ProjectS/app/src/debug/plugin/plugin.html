@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:v-on="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New SOL Plugin Test</title>
+    <link href="plugin.css" rel="stylesheet">
+    <script src="dist/vue.global.prod.js"></script>
+</head>
+
+<body>
+    <h2>WEB VIEW BRIDGE TEST</h2>
+    <div id="app">
+        <div id="toolbar" ref="toolbar" :class="{ sticky: isToolbarSticky }">
+            <input type="search" v-model="searchQuery" placeholder="검색할 플러그인명을 입력하세요" />
+        </div>
+        <div :style="{ height: toolbarStickyHeight + 'px' }"></div>
+        <div v-for="plugin in filteredPlugins" class="plugin">
+            <h3>{{ plugin.name }}</h3>
+            <div class="line"></div>
+
+            <template v-for="item in plugin.items">
+
+                <div v-if="item.viewType == 'button'" class="item">
+                    <button v-on:click="item.onClick.call(item)">{{ item.buttonText }}</button>
+                </div>
+
+                <div v-else-if="item.viewType == 'button_and_text'" class="item">
+                    <button v-on:click="item.onClick.call(item)">{{ item.buttonText }}</button>
+                    <p>{{ item.resultLabel }} : {{ item.resultValue }}</p>
+                </div>
+
+                <div v-else-if="item.viewType == 'dual_button_and_input'" class="item">
+                    <button v-on:click="item.onClick1.call(item)">{{ item.buttonText1 }}</button>&nbsp;
+                    <button v-on:click="item.onClick2.call(item)">{{ item.buttonText2 }}</button>
+                    <br /> <input type="text" />
+                </div>
+
+                <div v-else-if="item.viewType == 'button_and_image'" class="item">
+                    <button v-on:click="item.onClick.call(item)">{{ item.buttonText }}</button>
+                    <p v-if="item.imageSrc"><img :src="item.imageSrc" style="max-height: 150px;" /></p>
+                </div>
+
+                <div v-else-if="item.viewType == 'button_and_images'" class="item">
+                    <button v-on:click="item.onClick.call(item)">{{ item.buttonText }}</button>
+                    <p>
+                        <img v-for="imageSrc in item.imageSrcArray" :src="imageSrc" vspace=10 hspace=10 style="max-height: 150px;" />
+                    </p>
+                </div>
+
+                <div v-if="item.viewType == 'link'" class="item">
+                    <a :href="item.linkUrl">{{ item.linkText }}</a>
+                </div>
+
+            </template>
+        </div>
+    </div>
+
+    <script src="plugins.js"></script>
+    <script>
+        Vue.createApp({
+            data() {
+                return {
+                    plugins: pluginService.getItems(),
+                    searchQuery: "",
+                    isToolbarSticky: false,
+                    toolbarStickyOffset: 0,
+                }
+            },
+            computed: {
+                filteredPlugins() {
+                    let keyword = this.searchQuery.trim().toLowerCase()
+                    if (keyword.length == 0) {
+                        return this.plugins
+                    } else {
+                        return this.plugins.filter(function (plugin) {
+                            return plugin.name.toLowerCase().includes(keyword)
+                        })
+                    }
+                },
+                toolbarStickyHeight() {
+                    return this.isToolbarSticky ? this.$refs.toolbar.offsetHeight : 0
+                },
+            },
+            mounted() {
+                this.toolbarStickyOffset = this.$refs.toolbar.offsetTop
+                window.onscroll = this.handleScroll
+            },
+            methods: {
+                handleScroll(event) {
+                    this.isToolbarSticky = window.pageYOffset >= this.toolbarStickyOffset
+                },
+            },
+        }).mount('#app')
+
+    </script>
+</body>
+
+</html>
